@@ -51,7 +51,20 @@
 			 </exclusion>
             </exclusions>
         </dependency>
+
+
+          <dependency>
+            <groupId>org.ff4j</groupId>
+            <artifactId>ff4j-store-springjdbc</artifactId>
+            <version>${ff4j.version}</version>
+        </dependency>
         
+        <dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			
+		</dependency>
+		
         <!-- Setup with yaml -->
         <dependency>
             <groupId>org.ff4j</groupId>
