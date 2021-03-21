@@ -41,9 +41,49 @@ public class FF4jConfig {
     
     /** Some logger. */
     private static final Logger LOGGER = LoggerFactory.getLogger(HomeController.class);
+ 
+
+  
+
+ @Value("${spring.datasource.url}")
+    private String jdbcUrl;
+    
+    @Value("${spring.datasource.username}")
+    private String jdbcUserName;
+    
+    @Value("${spring.datasource.password}")
+    private String jdbcPassword;
+    
+    @Value("${spring.datasource.driver-class-name}")
+    private String jdbcDriver;
     
     @Bean
-    public FF4j getFF4j() {
+    public DataSource dataSource() {
+        DriverManagerDataSource jdbc = new DriverManagerDataSource();
+        jdbc.setDriverClassName(jdbcDriver);
+        jdbc.setUrl(jdbcUrl);
+        jdbc.setPassword(jdbcPassword);
+        jdbc.setUsername(jdbcUserName);
+        return jdbc;
+    }
+
+    @Bean
+    public FF4j getFF4j(DataSource dataSource) {
+        FF4j ff4j = new FF4j(new YamlParser(), "ff4j-init-dataset.yml").audit(true);
+ 
+        ff4j.setFeatureStore(new FeatureStoreSpringJdbc(dataSource));
+        ff4j.setPropertiesStore(new PropertyStoreSpringJdbc(dataSource));
+        ff4j.setEventRepository(new EventRepositorySpringJdbc(dataSource));
+        ff4j.audit(true);
+        ff4j.setEnableAudit(true);
+        ff4j.setAutocreate(true);
+
+        return ff4j;
+    }
+
+ 
+   // @Bean
+    public FF4j ___getFF4j() {
         /*
          * 0. Create bean needed for your stores based on the technology you want to use
          * 
