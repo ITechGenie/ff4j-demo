@@ -1,4 +1,4 @@
-package org.ff4j.sample;
+package com.itechgenie.apps.toogles.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -11,20 +11,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-/**
- * Having a home page for our app allowing.
- * 
- * - To provide a link to web console
- * - To provide a link to REST API
- * - To check for features
- */
 @Controller
-@RequestMapping("/")
+@RequestMapping("/apps")
 public class HomeController {
-    
-    /** Some logger. */
+
     private static final Logger LOGGER = LoggerFactory.getLogger(HomeController.class);
-    
+
     /** Constants from the dataset. */
     private static final String FEATURE_AWESOME = "AwesomeFeature";
     private static final String FEATURE1      = "first";
@@ -33,7 +25,7 @@ public class HomeController {
     @Autowired
     public FF4j ff4j;
     
-    @GetMapping("/")
+    @GetMapping("/home")
     public String home(HttpServletRequest req, Model model) {
         
         // if not exist, create and evaluate
