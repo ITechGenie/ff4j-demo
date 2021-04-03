@@ -41,11 +41,11 @@ public class ItgTogglesController {
 
 	@GetMapping(produces = { MediaType.APPLICATION_JSON_VALUE })
 	@RolesAllowed({ ROLE_READ })
-	@ApiOperation(value = "Read information about a feature with custom context data", httpMethod = "post", response = FeatureApiBean.class)
+	@ApiOperation(value = "Read information about a feature with custom context data", response = FeatureApiBean.class)
 	@ApiResponses({ @ApiResponse(code = 200, message = "Information about features"),
 			@ApiResponse(code = 404, message = "Feature not found") })
 	@RequestMapping(method = RequestMethod.GET, value = "feature")
-	public Object getFeature(@PathVariable("uid") String id, @RequestHeader("AM_USERID") String amUserId,
+	public Object getFeature(@RequestHeader("uid") String id, @RequestHeader("AM_USERID") String amUserId,
 			@RequestHeader("AM_ECPDID") String amEcpdId) {
 		if (!ff4j.getFeatureStore().exist(id)) {
 			String errMsg = new FeatureNotFoundException(id).getMessage();
@@ -55,6 +55,8 @@ public class ItgTogglesController {
 		FlippingExecutionContext fex = new FlippingExecutionContext();
 		fex.addValue("AM_USERID", amUserId);
 		fex.addValue("AM_ECPDID", amEcpdId);
+		fex.addValue("clientHostName", amEcpdId);
+		
 
 		Boolean featureEnabled = ff4j.check(id, fex);
 

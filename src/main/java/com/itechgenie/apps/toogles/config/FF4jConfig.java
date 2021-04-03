@@ -14,6 +14,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
+import com.itechgenie.apps.toogles.stores.CustomJdbcFeatureStore;
+import com.itechgenie.apps.toogles.stores.CustomJdbcQueryBuilder;
+
 @Configuration
 public class FF4jConfig {
 
@@ -46,10 +49,20 @@ public class FF4jConfig {
 	public FF4j getFF4j(DataSource dataSource) {
 		LOGGER.info("Configuring FF4J !!");
 		FF4j ff4j = new FF4j(new YamlParser(), "ff4j-init-dataset.yml").audit(true);
-
-		ff4j.setFeatureStore(new FeatureStoreSpringJdbc(dataSource));
-		ff4j.setPropertiesStore(new PropertyStoreSpringJdbc(dataSource));
-		ff4j.setEventRepository(new EventRepositorySpringJdbc(dataSource));
+		
+		CustomJdbcQueryBuilder queryBuilder = new CustomJdbcQueryBuilder("", "");
+		
+		CustomJdbcFeatureStore fjdbc = new CustomJdbcFeatureStore(dataSource) ;
+		fjdbc.setQueryBuilder(queryBuilder);
+		PropertyStoreSpringJdbc pjdbc = new PropertyStoreSpringJdbc(dataSource) ;
+		pjdbc.setQueryBuilder(queryBuilder);
+		EventRepositorySpringJdbc ejdbc = new EventRepositorySpringJdbc(dataSource) ;
+		ejdbc.setQueryBuilder(queryBuilder);
+		
+		ff4j.setFeatureStore(fjdbc);
+		ff4j.setPropertiesStore(pjdbc);
+		ff4j.setEventRepository(ejdbc);
+		
 		ff4j.audit(true);
 		ff4j.setEnableAudit(true);
 		ff4j.setAutocreate(true);
